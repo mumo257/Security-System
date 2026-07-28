@@ -504,6 +504,35 @@
             display: inline-block;
         }
 
+        .status-select {
+            width: 100%;
+            max-width: 180px;
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #fff;
+            color: #111827;
+            font-size: 14px;
+        }
+
+        .status-select.present {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #166534;
+        }
+
+        .status-select.late {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .status-select.absent {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+
         .present {
             background: #16a34a;
         }
@@ -798,35 +827,35 @@
                     <tr><th>ID</th><th>Photo</th><th>Name</th><th>Phone</th><th>Assignment</th><th>Shift</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr data-guard-id="G001">
                         <td>G001</td>
                         <td><img src="John.jpg" alt="Profile"></td>
                         <td>John Mwangi</td>
                         <td>0712345678</td>
                         <td>KCB Headquarters</td>
                         <td>Day</td>
-                        <td><span class="status-badge present">Active</span></td>
-                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><select class="status-select present" data-guard-id="G001"><option value="present" selected>Present</option><option value="late">Late</option><option value="absent">Absent</option></select></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;"></i></td>
                     </tr>
-                    <tr>
+                    <tr data-guard-id="G002">
                         <td>G002</td>
                         <td><img src="Peter.jpg" alt="Profile"></td>
                         <td>Peter Kariuki</td>
                         <td>0722334455</td>
                         <td>Safaricom HQ</td>
                         <td>Night</td>
-                        <td><span class="status-badge late">Leave</span></td>
-                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><select class="status-select late" data-guard-id="G002"><option value="present">Present</option><option value="late" selected>Late</option><option value="absent">Absent</option></select></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;"></i></td>
                     </tr>
-                    <tr>
+                    <tr data-guard-id="G003">
                         <td>G003</td>
                         <td><img src="James.jpg" alt="Profile"></td>
                         <td>James Otieno</td>
                         <td>0700112233</td>
                         <td>UN Offices</td>
                         <td>Day</td>
-                        <td><span class="status-badge absent">Suspended</span></td>
-                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><select class="status-select absent" data-guard-id="G003"><option value="present">Present</option><option value="late">Late</option><option value="absent" selected>Absent</option></select></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;"></i></td>
                     </tr>
                 </tbody>
             </table>
@@ -1000,6 +1029,55 @@
         return `<span class="status-badge ${normalized}">${label}</span>`;
     }
 
+    function createStatusSelect(status, guardId) {
+        const normalized = status.toLowerCase();
+        const select = document.createElement('select');
+        select.className = `status-select ${normalized}`;
+        select.dataset.guardId = guardId || '';
+        select.innerHTML = `
+            <option value="present" ${normalized === 'present' ? 'selected' : ''}>Present</option>
+            <option value="late" ${normalized === 'late' ? 'selected' : ''}>Late</option>
+            <option value="absent" ${normalized === 'absent' ? 'selected' : ''}>Absent</option>
+        `;
+        return select;
+    }
+
+    function updateStatusSelectClasses(select) {
+        select.classList.remove('present', 'late', 'absent');
+        select.classList.add(select.value);
+    }
+
+    function saveGuardStatus(guardId, status) {
+        if (!guardId) return;
+        try {
+            localStorage.setItem(`guard-status-${guardId}`, status);
+        } catch (e) {
+            // ignore storage errors in restricted browsers
+        }
+    }
+
+    function loadSavedGuardStatuses() {
+        const rows = document.querySelectorAll('#registered-guards-table tbody tr');
+        rows.forEach((row) => {
+            const guardId = row.dataset.guardId || row.cells[0]?.textContent.trim();
+            const select = row.querySelector('.status-select');
+            if (!guardId || !select) return;
+            const saved = localStorage.getItem(`guard-status-${guardId}`);
+            if (saved) {
+                select.value = saved;
+                updateStatusSelectClasses(select);
+            }
+        });
+    }
+
+    function handleStatusChange(event) {
+        const select = event.target.closest('.status-select');
+        if (!select) return;
+        const guardId = select.dataset.guardId || select.closest('tr')?.dataset.guardId || select.closest('tr')?.cells[0]?.textContent.trim();
+        updateStatusSelectClasses(select);
+        saveGuardStatus(guardId, select.value);
+    }
+
     function saveNewGuard() {
         const id = document.getElementById('new-guard-id').value.trim();
         const name = document.getElementById('new-guard-name').value.trim();
@@ -1031,6 +1109,7 @@
 
         if (registeredBody) {
             const registeredRow = document.createElement('tr');
+            registeredRow.dataset.guardId = id;
             registeredRow.innerHTML = `
                 <td>${id}</td>
                 <td><img src="images/profile.png" alt="${name}"></td>
@@ -1038,10 +1117,13 @@
                 <td>${phone}</td>
                 <td>${assignment}</td>
                 <td>${shift}</td>
-                <td>${createStatusBadge(status)}</td>
-                <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                <td></td>
+                <td><i class="fa-solid fa-trash" style="color:red;"></i></td>
             `;
+            const selectCell = registeredRow.cells[6];
+            selectCell.appendChild(createStatusSelect(status, id));
             registeredBody.appendChild(registeredRow);
+            saveGuardStatus(id, status);
         }
 
         message.textContent = 'New guard added successfully.';
@@ -1104,6 +1186,13 @@
         if (cancelAddGuard) {
             cancelAddGuard.addEventListener('click', closeAddGuardPanel);
         }
+
+        const registeredGuardTable = document.getElementById('registered-guards-table');
+        if (registeredGuardTable) {
+            registeredGuardTable.addEventListener('change', handleStatusChange);
+        }
+
+        loadSavedGuardStatuses();
 
         const hash = window.location.hash.slice(1);
         if (hash && document.getElementById(hash)) {
