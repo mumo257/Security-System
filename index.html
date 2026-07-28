@@ -620,8 +620,48 @@
             }
 
             .sidebar {
-                display: none;
+                /* keep sidebar off-canvas on small screens; shown via .show */
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                transition: transform .28s ease;
+                z-index: 1000;
+                width: 260px;
             }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+                z-index: 900;
+            }
+
+            .mobile-overlay.show {
+                display: block;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                left: 12px;
+                top: 12px;
+                z-index: 1100;
+                background: #2563eb;
+                color: #fff;
+                border: none;
+                padding: 10px 12px;
+                border-radius: 8px;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            }
+
+            .mobile-menu-btn i { font-size: 18px; }
 
             .main-content {
                 margin-left: 0;
@@ -632,6 +672,8 @@
     </style>
 </head>
 <body>
+    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <div id="mobile-overlay" class="mobile-overlay"></div>
 
 <div id="login-screen" class="screen auth-screen">
     <div class="container">
@@ -1193,6 +1235,28 @@
         }
 
         loadSavedGuardStatuses();
+
+        // Mobile menu toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+        function openMobileMenu() {
+            if (sidebar) sidebar.classList.add('show');
+            if (overlay) overlay.classList.add('show');
+        }
+        function closeMobileMenu() {
+            if (sidebar) sidebar.classList.remove('show');
+            if (overlay) overlay.classList.remove('show');
+        }
+        if (mobileBtn) mobileBtn.addEventListener('click', openMobileMenu);
+        if (overlay) overlay.addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu when navigation links are used
+        document.querySelectorAll('.sidebar .menu a').forEach((a) => {
+            a.addEventListener('click', () => {
+                closeMobileMenu();
+            });
+        });
 
         const hash = window.location.hash.slice(1);
         if (hash && document.getElementById(hash)) {
