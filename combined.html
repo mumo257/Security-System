@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Security — Combined Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body {
+            background: #f4f7fc;
+            color: #333;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        button,
+        .menu li a {
+            cursor: pointer;
+        }
+
+        .screen {
+            min-height: 100vh;
+        }
+
+        .auth-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 0;
+            background: #e9edf5;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            min-height: 90vh;
+            display: flex;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(rgba(10, 25, 50, .85), rgba(10, 25, 50, .85)),
+                url("../images/security-bg.jpg");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 40px;
+        }
+
+        .overlay {
+            text-align: center;
+        }
+
+        .overlay .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+
+        .overlay h1 {
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+
+        .overlay p {
+            font-size: 18px;
+            line-height: 35px;
+            color: #d7d7d7;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+        }
+
+        .login-form {
+            width: 80%;
+            max-width: 420px;
+        }
+
+        .login-form h2 {
+            color: #0f172a;
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .login-form p {
+            color: #666;
+            margin-bottom: 35px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: #f4f6fa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 0 15px;
+            transition: .3s;
+        }
+
+        .input-group:hover,
+        .input-group:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, .25);
+        }
+
+        .input-group i {
+            color: #2563eb;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: scale(.98);
+        }
+
+        .forgot {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .add-form {
+            background: #fff;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+            margin-bottom: 20px;
+        }
+
+        .add-form h3 {
+            margin-bottom: 18px;
+            color: #0f172a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .add-form input,
+        .add-form select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: #f9fafb;
+        }
+
+        .form-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .add-form button {
+            padding: 12px 22px;
+            border-radius: 10px;
+            border: none;
+            color: #fff;
+            background: #2563eb;
+            transition: .3s;
+        }
+
+        .add-form button.secondary {
+            background: #64748b;
+        }
+
+        .add-form button:hover {
+            transform: translateY(-1px);
+        }
+
+        .add-form button.secondary:hover {
+            background: #475569;
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0f172a;
+            position: fixed;
+            left: 0;
+            top: 0;
+            color: #fff;
+            overflow-y: auto;
+            box-shadow: 3px 0 12px rgba(0, 0, 0, .15);
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .sidebar .logo i {
+            font-size: 50px;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .logo h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .menu {
+            list-style: none;
+            margin-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        .menu li {
+            margin: 8px 15px;
+        }
+
+        .menu li a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #cbd5e1;
+            padding: 15px;
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        .menu li a:hover,
+        .menu li a.active {
+            background: #2563eb;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .search-box {
+            width: 400px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+        }
+
+        .search-box i {
+            color: #2563eb;
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .notification {
+            font-size: 24px;
+            cursor: pointer;
+            color: #2563eb;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #333;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #2563eb;
+            object-fit: cover;
+        }
+
+        .profile h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .profile small {
+            color: gray;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            color: #0f172a;
+        }
+
+        .welcome p,
+        .content-summary p {
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+            transition: .3s;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card i {
+            font-size: 42px;
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            font-size: 36px;
+            color: #0f172a;
+        }
+
+        .card p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-header h2 {
+            color: #0f172a;
+        }
+
+        .table-header button {
+            width: auto;
+            padding: 12px 22px;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        thead {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        thead th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .status-badge {
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .present {
+            background: #16a34a;
+        }
+
+        .late {
+            background: #f59e0b;
+        }
+
+        .absent {
+            background: #dc2626;
+        }
+
+        .content-summary {
+            max-width: 760px;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar .logo h2,
+            .sidebar .menu li a span {
+                display: none;
+            }
+
+            .sidebar .menu li a {
+                justify-content: center;
+                font-size: 0;
+            }
+
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+
+            .search-box {
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header,
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .profile h4,
+            .profile small {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .auth-screen {
+                padding: 20px 0;
+            }
+
+            .container {
+                flex-direction: column;
+                min-height: auto;
+                margin: 20px 0;
+            }
+
+            .left-panel {
+                min-height: 300px;
+                padding: 30px 20px;
+            }
+
+            .right-panel {
+                padding: 40px 20px;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-screen" class="screen auth-screen">
+    <div class="container">
+        <div class="left-panel">
+            <div class="overlay">
+                <i class="fa-solid fa-shield-halved logo"></i>
+                <h1>Security Management System</h1>
+                <p>
+                    Monitor Guards.<br>
+                    Manage Deployments.<br>
+                    Track Incidents.<br>
+                    Secure Everything.
+                </p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <form id="login-form" class="login-form">
+                <h2>Welcome Back</h2>
+                <p>Please login to continue</p>
+                <div class="input-group">
+                    <i class="fa fa-user"></i>
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <button type="submit">Login</button>
+                <a href="#" class="forgot" onclick="showScreen('forgot-screen'); return false;">
+                    Forgot Password?
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="forgot-screen" class="screen auth-screen hidden">
+    <div class="container">
+        <div class="left-panel">
+            <div class="overlay">
+                <i class="fa-solid fa-key logo"></i>
+                <h1>Password Recovery</h1>
+                <p>
+                    Don't worry!<br>
+                    Enter your registered email address.<br>
+                    We'll send you a reset link.
+                </p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <form id="forgot-form" class="login-form">
+                <h2>Reset Password</h2>
+                <p>Enter your registered email address.</p>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input id="forgot-email" type="email" placeholder="Email Address" required>
+                </div>
+                <button type="submit">Send Reset Link</button>
+                <p id="forgot-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
+                <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Login
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="dashboard-screen" class="screen hidden">
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>Elite Security</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-target="dashboard-screen" class="active"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+            <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
+            <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>Dashboard</h1>
+                <p class="content-summary">Manage guards, deployments, attendance and security operations.</p>
+            </div>
+            <div class="top-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="dashboard-search" type="text" placeholder="Search guard, client, report...">
+                </div>
+                <div class="profile">
+                    <img src="Image.jpg" alt="Profile">
+                    <div>
+                        <h4>Festus Mumo</h4>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="welcome">
+            <h1>Welcome Back, Festus 👋</h1>
+            <p>Manage guards, deployments, attendance and security operations.</p>
+        </section>
+        <section class="cards">
+            <div class="card"><i class="fa-solid fa-user-shield"></i><h2>256</h2><p>Total Guards</p></div>
+            <div class="card"><i class="fa-solid fa-user-check"></i><h2>198</h2><p>On Duty</p></div>
+            <div class="card"><i class="fa-solid fa-user-clock"></i><h2>58</h2><p>Off Duty</p></div>
+            <div class="card"><i class="fa-solid fa-triangle-exclamation"></i><h2>3</h2><p>Incidents Today</p></div>
+        </section>
+        <section class="table-container">
+            <div class="table-header">
+                <h2>Today's Guard Deployment</h2>
+                <button type="button" id="dashboard-add-guard-btn"><i class="fa-solid fa-plus"></i> Add Guard</button>
+            </div>
+            <div id="add-guard-box" class="add-form hidden">
+                <h3>Add New Guard</h3>
+                <div class="form-grid">
+                    <input id="new-guard-id" type="text" placeholder="Guard ID" required>
+                    <input id="new-guard-name" type="text" placeholder="Guard Name" required>
+                    <input id="new-guard-phone" type="text" placeholder="Phone" required>
+                    <input id="new-guard-assignment" type="text" placeholder="Assignment / Site" required>
+                    <select id="new-guard-shift">
+                        <option value="Day">Day</option>
+                        <option value="Night">Night</option>
+                    </select>
+                    <select id="new-guard-status">
+                        <option value="present">Present</option>
+                        <option value="late">Late</option>
+                        <option value="absent">Absent</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="save-guard-btn">Add Guard</button>
+                    <button type="button" id="cancel-add-guard" class="secondary">Cancel</button>
+                </div>
+                <p id="add-guard-message" style="display:none;margin-top:12px;color:#16a34a;"></p>
+            </div>
+            <table id="dashboard-table">
+                <thead>
+                    <tr><th>ID</th><th>Guard</th><th>Site</th><th>Shift</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>001</td><td>John Mwangi</td><td>KCB Headquarters</td><td>Day</td><td><span class="status-badge present">Present</span></td></tr>
+                    <tr><td>002</td><td>Peter Kariuki</td><td>Safaricom HQ</td><td>Night</td><td><span class="status-badge late">Late</span></td></tr>
+                    <tr><td>003</td><td>James Otieno</td><td>UN Offices</td><td>Day</td><td><span class="status-badge absent">Absent</span></td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<div id="guards-screen" class="screen hidden">
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>Elite Security</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+            <li><a href="#" data-target="guards-screen" class="active"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
+            <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>Guard Management</h1>
+                <p class="content-summary">Manage all deployed security guards.</p>
+            </div>
+            <div class="top-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search guard...">
+                </div>
+            </div>
+        </header>
+        <section class="cards">
+            <div class="card"><i class="fa-solid fa-user-shield"></i><h2>256</h2><p>Total Guards</p></div>
+            <div class="card"><i class="fa-solid fa-user-check"></i><h2>198</h2><p>Active</p></div>
+            <div class="card"><i class="fa-solid fa-user-xmark"></i><h2>12</h2><p>Suspended</p></div>
+            <div class="card"><i class="fa-solid fa-user-clock"></i><h2>46</h2><p>On Leave</p></div>
+        </section>
+        <section class="table-container">
+            <div class="table-header">
+                <h2>Registered Guards</h2>
+                <button type="button" id="guards-add-guard-btn"><i class="fa-solid fa-plus"></i> Add Guard</button>
+            </div>
+            <table id="registered-guards-table">
+                <thead>
+                    <tr><th>ID</th><th>Photo</th><th>Name</th><th>Phone</th><th>Assignment</th><th>Shift</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>G001</td>
+                        <td><img src="John.jpg" alt="Profile"></td>
+                        <td>John Mwangi</td>
+                        <td>0712345678</td>
+                        <td>KCB Headquarters</td>
+                        <td>Day</td>
+                        <td><span class="status-badge present">Active</span></td>
+                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>G002</td>
+                        <td><img src="Peter.jpg" alt="Profile"></td>
+                        <td>Peter Kariuki</td>
+                        <td>0722334455</td>
+                        <td>Safaricom HQ</td>
+                        <td>Night</td>
+                        <td><span class="status-badge late">Leave</span></td>
+                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>G003</td>
+                        <td><img src="James.jpg" alt="Profile"></td>
+                        <td>James Otieno</td>
+                        <td>0700112233</td>
+                        <td>UN Offices</td>
+                        <td>Day</td>
+                        <td><span class="status-badge absent">Suspended</span></td>
+                        <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<div id="controllers-screen" class="screen hidden">
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>Elite Security</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+            <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
+            <li><a href="#" data-target="controllers-screen" class="active"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>Controllers</h1>
+                <p class="content-summary">Manage controllers and their assigned regions.</p>
+            </div>
+            <div class="top-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search controller...">
+                </div>
+            </div>
+        </header>
+        <section class="cards">
+            <div class="card"><i class="fa-solid fa-users"></i><h2>18</h2><p>Total Controllers</p></div>
+            <div class="card"><i class="fa-solid fa-user-check"></i><h2>16</h2><p>On Duty</p></div>
+            <div class="card"><i class="fa-solid fa-user-clock"></i><h2>2</h2><p>Off Duty</p></div>
+            <div class="card"><i class="fa-solid fa-map-location-dot"></i><h2>12</h2><p>Regions Covered</p></div>
+        </section>
+        <section class="table-container">
+            <div class="table-header">
+                <h2>Controller List</h2>
+                <button><i class="fa-solid fa-plus"></i> Add Controller</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>Photo</th><th>Name</th><th>Phone</th><th>Region</th><th>Guards</th><th>Shift</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>C001</td>
+                        <td><img src="images/profile.png" alt="Profile"></td>
+                        <td>Daniel Mutiso</td>
+                        <td>0712345678</td>
+                        <td>Nairobi CBD</td>
+                        <td>24</td>
+                        <td>Day</td>
+                        <td><span class="status-badge present">On Duty</span></td>
+                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>C002</td>
+                        <td><img src="images/profile.png" alt="Profile"></td>
+                        <td>Samuel Odhiambo</td>
+                        <td>0722334455</td>
+                        <td>Westlands</td>
+                        <td>18</td>
+                        <td>Night</td>
+                        <td><span class="status-badge late">Leave</span></td>
+                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>C003</td>
+                        <td><img src="images/profile.png" alt="Profile"></td>
+                        <td>Grace Wanjiku</td>
+                        <td>0700112233</td>
+                        <td>Industrial Area</td>
+                        <td>21</td>
+                        <td>Day</td>
+                        <td><span class="status-badge present">On Duty</span></td>
+                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>C004</td>
+                        <td><img src="images/profile.png" alt="Profile"></td>
+                        <td>Joseph Karanja</td>
+                        <td>0799887766</td>
+                        <td>Karen</td>
+                        <td>16</td>
+                        <td>Night</td>
+                        <td><span class="status-badge absent">Suspended</span></td>
+                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<script>
+    const sections = document.querySelectorAll('.screen');
+    const sidebarLinks = document.querySelectorAll('.sidebar .menu a[data-target]');
+
+    function showScreen(id) {
+        sections.forEach((section) => {
+            section.classList.toggle('hidden', section.id !== id);
+        });
+        updateActiveMenu(id);
+        window.location.hash = id;
+        window.scrollTo(0, 0);
+    }
+
+    function updateActiveMenu(id) {
+        sidebarLinks.forEach((link) => {
+            link.classList.toggle('active', link.dataset.target === id);
+        });
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('forgot-screen').classList.add('hidden');
+        showScreen('dashboard-screen');
+        return false;
+    }
+
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    const forgotForm = document.getElementById('forgot-form');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', handleForgotPassword);
+    }
+
+    function handleForgotPassword(event) {
+        event.preventDefault();
+        const emailInput = document.getElementById('forgot-email');
+        const message = document.getElementById('forgot-message');
+        const email = emailInput.value.trim();
+        if (!email) {
+            message.textContent = 'Please enter your email address.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return false;
+        }
+
+        message.textContent = `A password reset link has been sent to ${email}. Check your inbox.`;
+        message.style.color = '#16a34a';
+        message.style.display = 'block';
+        emailInput.value = '';
+        return false;
+    }
+
+    function openAddGuardPanel() {
+        const box = document.getElementById('add-guard-box');
+        if (box) box.classList.remove('hidden');
+    }
+
+    function closeAddGuardPanel() {
+        const box = document.getElementById('add-guard-box');
+        if (box) box.classList.add('hidden');
+        const message = document.getElementById('add-guard-message');
+        if (message) message.style.display = 'none';
+    }
+
+    function createStatusBadge(status) {
+        const normalized = status.toLowerCase();
+        const label = normalized === 'present' ? 'Present' : normalized === 'late' ? 'Late' : 'Absent';
+        return `<span class="status-badge ${normalized}">${label}</span>`;
+    }
+
+    function saveNewGuard() {
+        const id = document.getElementById('new-guard-id').value.trim();
+        const name = document.getElementById('new-guard-name').value.trim();
+        const phone = document.getElementById('new-guard-phone').value.trim();
+        const assignment = document.getElementById('new-guard-assignment').value.trim();
+        const shift = document.getElementById('new-guard-shift').value;
+        const status = document.getElementById('new-guard-status').value;
+        const message = document.getElementById('add-guard-message');
+
+        if (!id || !name || !phone || !assignment) {
+            message.textContent = 'Please fill in all fields to add a guard.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return;
+        }
+
+        const dashboardBody = document.querySelector('#dashboard-table tbody');
+        const registeredBody = document.querySelector('#registered-guards-table tbody');
+        const rowHtml = `
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${assignment}</td>
+            <td>${shift}</td>
+            <td>${createStatusBadge(status)}</td>
+        `;
+        const dashboardRow = document.createElement('tr');
+        dashboardRow.innerHTML = rowHtml;
+        dashboardBody.appendChild(dashboardRow);
+
+        if (registeredBody) {
+            const registeredRow = document.createElement('tr');
+            registeredRow.innerHTML = `
+                <td>${id}</td>
+                <td><img src="images/profile.png" alt="${name}"></td>
+                <td>${name}</td>
+                <td>${phone}</td>
+                <td>${assignment}</td>
+                <td>${shift}</td>
+                <td>${createStatusBadge(status)}</td>
+                <td><i class="fa-solid fa-pen-to-square" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+            `;
+            registeredBody.appendChild(registeredRow);
+        }
+
+        message.textContent = 'New guard added successfully.';
+        message.style.color = '#16a34a';
+        message.style.display = 'block';
+
+        document.getElementById('new-guard-id').value = '';
+        document.getElementById('new-guard-name').value = '';
+        document.getElementById('new-guard-phone').value = '';
+        document.getElementById('new-guard-assignment').value = '';
+        document.getElementById('new-guard-shift').value = 'Day';
+        document.getElementById('new-guard-status').value = 'present';
+    }
+
+    function filterDashboardTable(query) {
+        const table = document.getElementById('dashboard-table');
+        const rows = table.querySelectorAll('tbody tr');
+        const lowerQuery = query.trim().toLowerCase();
+        rows.forEach((row) => {
+            const guardNameCell = row.cells[1];
+            const guardName = guardNameCell ? guardNameCell.textContent.toLowerCase() : '';
+            row.style.display = guardName.includes(lowerQuery) ? '' : 'none';
+        });
+    }
+
+    document.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-target]');
+        if (!target) return;
+        event.preventDefault();
+        showScreen(target.dataset.target);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('dashboard-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (event) => {
+                filterDashboardTable(event.target.value);
+            });
+        }
+
+        const addGuardBtn = document.getElementById('dashboard-add-guard-btn');
+        if (addGuardBtn) {
+            addGuardBtn.addEventListener('click', openAddGuardPanel);
+        }
+
+        const guardsAddGuardBtn = document.getElementById('guards-add-guard-btn');
+        if (guardsAddGuardBtn) {
+            guardsAddGuardBtn.addEventListener('click', () => {
+                showScreen('dashboard-screen');
+                openAddGuardPanel();
+            });
+        }
+
+        const saveGuardBtn = document.getElementById('save-guard-btn');
+        if (saveGuardBtn) {
+            saveGuardBtn.addEventListener('click', saveNewGuard);
+        }
+
+        const cancelAddGuard = document.getElementById('cancel-add-guard');
+        if (cancelAddGuard) {
+            cancelAddGuard.addEventListener('click', closeAddGuardPanel);
+        }
+
+        const hash = window.location.hash.slice(1);
+        if (hash && document.getElementById(hash)) {
+            showScreen(hash);
+        } else {
+            showScreen('login-screen');
+        }
+    });
+</script>
+</body>
+</html>
