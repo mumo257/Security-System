@@ -415,6 +415,52 @@
             text-align: center;
         }
 
+        .clients-section {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+            margin-bottom: 35px;
+        }
+
+        .clients-section h2 {
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .client-logos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            align-items: center;
+        }
+
+        .client-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #f8fafc;
+            min-height: 120px;
+        }
+
+        .client-logo img {
+            max-width: 130px;
+            max-height: 60px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .client-logo p {
+            margin: 0;
+            font-size: 14px;
+            color: #334155;
+            font-weight: 600;
+        }
+
         .card:hover {
             transform: translateY(-8px);
         }
@@ -785,6 +831,32 @@
             <div class="card"><i class="fa-solid fa-user-clock"></i><h2>58</h2><p>Off Duty</p></div>
             <div class="card"><i class="fa-solid fa-triangle-exclamation"></i><h2>3</h2><p>Incidents Today</p></div>
         </section>
+        <section class="clients-section">
+            <h2>Trusted Clients</h2>
+            <div class="client-logos">
+                <div class="client-logo">
+                    <img src="KCB_Bank_Kenya_Limited_logo.jpg" alt="KCB Bank logo">
+                </div>
+                <div class="client-logo">
+                    <img src="Car and General.jpg" alt="Car and General logo">
+                </div>
+                <div class="client-logo">
+                    <img src="World Vision Kenya.jpg" alt="World Vision logo">
+                </div>
+                <div class="client-logo">
+                    <img src="National Bank of Kenya.jpg" alt="National Bank logo">
+                </div>
+                <div class="client-logo">
+                    <img src="Safaricom.jpg" alt="Safaricom logo">
+                </div>
+                <div class="client-logo">
+                    <img src="Equity.jpg" alt="Equity Bank logo">
+                </div>
+                <div class="client-logo">
+                    <img src="UNHCR.jpg" alt="UNHCR logo">
+                </div>
+            </div>
+        </section>
         <section class="table-container">
             <div class="table-header">
                 <h2>Today's Guard Deployment</h2>
@@ -940,56 +1012,76 @@
         <section class="table-container">
             <div class="table-header">
                 <h2>Controller List</h2>
-                <button><i class="fa-solid fa-plus"></i> Add Controller</button>
+                <button type="button" id="controllers-add-controller-btn"><i class="fa-solid fa-plus"></i> Add Controller</button>
             </div>
-            <table>
+            <div id="add-controller-box" class="add-form hidden">
+                <h3>Add New Controller</h3>
+                <div class="form-grid">
+                    <input id="new-controller-id" type="text" placeholder="Controller ID" required>
+                    <input id="new-controller-name" type="text" placeholder="Controller Name" required>
+                    <input id="new-controller-phone" type="text" placeholder="Phone" required>
+                    <input id="new-controller-region" type="text" placeholder="Region" required>
+                    <input id="new-controller-guards" type="number" min="0" placeholder="Guards Assigned" required>
+                    <select id="new-controller-shift">
+                        <option value="Day">Day</option>
+                        <option value="Night">Night</option>
+                    </select>
+                    <select id="new-controller-status">
+                        <option value="On Duty">On Duty</option>
+                        <option value="Leave">Leave</option>
+                        <option value="Suspended">Suspended</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="save-controller-btn">Add Controller</button>
+                    <button type="button" id="cancel-add-controller" class="secondary">Cancel</button>
+                </div>
+                <p id="add-controller-message" style="display:none;margin-top:12px;color:#16a34a;"></p>
+            </div>
+            <table id="controllers-table">
                 <thead>
-                    <tr><th>ID</th><th>Photo</th><th>Name</th><th>Phone</th><th>Region</th><th>Guards</th><th>Shift</th><th>Status</th><th>Action</th></tr>
+                    <tr><th>ID</th><th>Name</th><th>Phone</th><th>Region</th><th>Guards</th><th>Shift</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>C001</td>
-                        <td><img src="images/profile.png" alt="Profile"></td>
                         <td>Daniel Mutiso</td>
                         <td>0712345678</td>
                         <td>Nairobi CBD</td>
                         <td>24</td>
                         <td>Day</td>
                         <td><span class="status-badge present">On Duty</span></td>
-                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;cursor:pointer;" data-action="delete-controller"></i></td>
                     </tr>
                     <tr>
                         <td>C002</td>
-                        <td><img src="images/profile.png" alt="Profile"></td>
                         <td>Samuel Odhiambo</td>
                         <td>0722334455</td>
                         <td>Westlands</td>
                         <td>18</td>
                         <td>Night</td>
                         <td><span class="status-badge late">Leave</span></td>
-                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;cursor:pointer;" data-action="delete-controller"></i></td>
                     </tr>
                     <tr>
                         <td>C003</td>
-                        <td><img src="images/profile.png" alt="Profile"></td>
                         <td>Grace Wanjiku</td>
                         <td>0700112233</td>
                         <td>Industrial Area</td>
                         <td>21</td>
                         <td>Day</td>
                         <td><span class="status-badge present">On Duty</span></td>
-                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;cursor:pointer;" data-action="delete-controller"></i></td>
                     </tr>
                     <tr>
                         <td>C004</td>
-                        <td><img src="images/profile.png" alt="Profile"></td>
                         <td>Joseph Karanja</td>
                         <td>0799887766</td>
                         <td>Karen</td>
                         <td>16</td>
                         <td>Night</td>
                         <td><span class="status-badge absent">Suspended</span></td>
-                        <td><i class="fa-solid fa-eye" style="color:#2563eb;"></i>&nbsp;&nbsp;<i class="fa-solid fa-pen" style="color:green;"></i>&nbsp;&nbsp;<i class="fa-solid fa-trash" style="color:red;"></i></td>
+                        <td><i class="fa-solid fa-trash" style="color:red;cursor:pointer;" data-action="delete-controller"></i></td>
                     </tr>
                 </tbody>
             </table>
@@ -1180,6 +1272,147 @@
         document.getElementById('new-guard-status').value = 'present';
     }
 
+    const controllerStorageKey = 'controllers-data';
+    const defaultControllers = [
+        { id: 'C001', name: 'Daniel Mutiso', phone: '0712345678', region: 'Nairobi CBD', guards: '24', shift: 'Day', status: 'On Duty' },
+        { id: 'C002', name: 'Samuel Odhiambo', phone: '0722334455', region: 'Westlands', guards: '18', shift: 'Night', status: 'Leave' },
+        { id: 'C003', name: 'Grace Wanjiku', phone: '0700112233', region: 'Industrial Area', guards: '21', shift: 'Day', status: 'On Duty' },
+        { id: 'C004', name: 'Joseph Karanja', phone: '0799887766', region: 'Karen', guards: '16', shift: 'Night', status: 'Suspended' }
+    ];
+
+    function getSavedControllers() {
+        try {
+            const saved = localStorage.getItem(controllerStorageKey);
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function persistControllers(controllers) {
+        try {
+            localStorage.setItem(controllerStorageKey, JSON.stringify(controllers));
+        } catch (e) {
+            // ignore storage errors
+        }
+    }
+
+    function sortControllers(controllers) {
+        return controllers.slice().sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' }));
+    }
+
+    function getControllerStatusClass(status) {
+        const normalized = status.toLowerCase();
+        if (normalized.includes('on duty')) return 'present';
+        if (normalized.includes('leave')) return 'late';
+        if (normalized.includes('suspended')) return 'absent';
+        return 'present';
+    }
+
+    function createControllerStatusBadge(status) {
+        const cssClass = getControllerStatusClass(status);
+        return `<span class="status-badge ${cssClass}">${status}</span>`;
+    }
+
+    function createControllerRow(controller) {
+        const row = document.createElement('tr');
+        row.dataset.controllerId = controller.id;
+        row.innerHTML = `
+            <td>${controller.id}</td>
+            <td>${controller.name}</td>
+            <td>${controller.phone}</td>
+            <td>${controller.region}</td>
+            <td>${controller.guards}</td>
+            <td>${controller.shift}</td>
+            <td>${createControllerStatusBadge(controller.status)}</td>
+            <td><i class="fa-solid fa-trash" style="color:red;cursor:pointer;" data-action="delete-controller"></i></td>
+        `;
+        return row;
+    }
+
+    function renderControllers() {
+        const tableBody = document.querySelector('#controllers-table tbody');
+        if (!tableBody) return;
+
+        const controllers = sortControllers(getSavedControllers() || defaultControllers);
+        tableBody.innerHTML = '';
+
+        controllers.forEach((controller) => {
+            tableBody.appendChild(createControllerRow(controller));
+        });
+
+        return controllers;
+    }
+
+    function openAddControllerPanel() {
+        const box = document.getElementById('add-controller-box');
+        if (box) box.classList.remove('hidden');
+    }
+
+    function closeAddControllerPanel() {
+        const box = document.getElementById('add-controller-box');
+        if (box) box.classList.add('hidden');
+        const message = document.getElementById('add-controller-message');
+        if (message) message.style.display = 'none';
+    }
+
+    function saveNewController() {
+        const id = document.getElementById('new-controller-id').value.trim();
+        const name = document.getElementById('new-controller-name').value.trim();
+        const phone = document.getElementById('new-controller-phone').value.trim();
+        const region = document.getElementById('new-controller-region').value.trim();
+        const guards = document.getElementById('new-controller-guards').value.trim();
+        const shift = document.getElementById('new-controller-shift').value;
+        const status = document.getElementById('new-controller-status').value;
+        const message = document.getElementById('add-controller-message');
+
+        if (!id || !name || !phone || !region || !guards) {
+            message.textContent = 'Please fill in all fields to add a controller.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return;
+        }
+
+        const existingControllers = getSavedControllers() || defaultControllers.slice();
+        if (existingControllers.some((controller) => controller.id.toLowerCase() === id.toLowerCase())) {
+            message.textContent = 'A controller with this ID already exists.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return;
+        }
+
+        existingControllers.push({ id, name, phone, region, guards, shift, status });
+        const sorted = sortControllers(existingControllers);
+        persistControllers(sorted);
+        renderControllers();
+
+        message.textContent = 'New controller added successfully.';
+        message.style.color = '#16a34a';
+        message.style.display = 'block';
+
+        document.getElementById('new-controller-id').value = '';
+        document.getElementById('new-controller-name').value = '';
+        document.getElementById('new-controller-phone').value = '';
+        document.getElementById('new-controller-region').value = '';
+        document.getElementById('new-controller-guards').value = '';
+        document.getElementById('new-controller-shift').value = 'Day';
+        document.getElementById('new-controller-status').value = 'On Duty';
+    }
+
+    function handleControllerTableClick(event) {
+        const deleteButton = event.target.closest('[data-action="delete-controller"]');
+        if (!deleteButton) return;
+
+        const row = deleteButton.closest('tr');
+        const controllerId = row?.dataset.controllerId;
+        if (!controllerId) return;
+
+        const controllers = getSavedControllers() || defaultControllers.slice();
+        const remainingControllers = controllers.filter((controller) => controller.id !== controllerId);
+        persistControllers(remainingControllers);
+        renderControllers();
+    }
+
     function filterDashboardTable(query) {
         const table = document.getElementById('dashboard-table');
         const rows = table.querySelectorAll('tbody tr');
@@ -1234,7 +1467,28 @@
             registeredGuardTable.addEventListener('change', handleStatusChange);
         }
 
+        const controllersAddControllerBtn = document.getElementById('controllers-add-controller-btn');
+        if (controllersAddControllerBtn) {
+            controllersAddControllerBtn.addEventListener('click', openAddControllerPanel);
+        }
+
+        const saveControllerBtn = document.getElementById('save-controller-btn');
+        if (saveControllerBtn) {
+            saveControllerBtn.addEventListener('click', saveNewController);
+        }
+
+        const cancelAddController = document.getElementById('cancel-add-controller');
+        if (cancelAddController) {
+            cancelAddController.addEventListener('click', closeAddControllerPanel);
+        }
+
+        const controllersTable = document.getElementById('controllers-table');
+        if (controllersTable) {
+            controllersTable.addEventListener('click', handleControllerTableClick);
+        }
+
         loadSavedGuardStatuses();
+        renderControllers();
 
         // Mobile menu toggle
         const mobileBtn = document.getElementById('mobile-menu-btn');
