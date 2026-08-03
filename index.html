@@ -255,69 +255,82 @@
         }
 
         .sidebar {
-            width: 260px;
-            height: 100vh;
+            width: 100%;
+            min-height: auto;
             background: #0f172a;
-            position: fixed;
-            left: 0;
-            top: 0;
+            position: relative;
+            left: auto;
+            top: auto;
             color: #fff;
-            overflow-y: auto;
-            box-shadow: 3px 0 12px rgba(0, 0, 0, .15);
+            overflow: visible;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            flex-wrap: wrap;
         }
 
         .sidebar .logo {
-            text-align: center;
-            padding: 30px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, .1);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0;
+            border-bottom: none;
         }
 
         .sidebar .logo i {
-            font-size: 50px;
+            font-size: 32px;
             color: #38bdf8;
-            margin-bottom: 10px;
+            margin: 0;
         }
 
         .sidebar .logo h2 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
+            margin: 0;
         }
 
         .menu {
             list-style: none;
-            margin-top: 20px;
-            padding-bottom: 40px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
         }
 
         .menu li {
-            margin: 8px 15px;
+            margin: 0;
         }
 
         .menu li a {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             color: #cbd5e1;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
             transition: .3s;
+            white-space: nowrap;
         }
 
         .menu li a:hover,
         .menu li a.active {
             background: #2563eb;
             color: #fff;
-            transform: translateX(5px);
+            transform: none;
         }
 
         .menu i {
-            width: 20px;
-            text-align: center;
+            width: auto;
+            text-align: left;
         }
 
         .main-content {
-            margin-left: 260px;
-            width: calc(100% - 260px);
+            margin-left: 0;
+            width: 100%;
             padding: 30px;
         }
 
@@ -597,26 +610,16 @@
 
         @media (max-width: 992px) {
             .sidebar {
-                width: 80px;
+                padding: 18px 18px;
             }
 
-            .sidebar .logo h2,
-            .sidebar .menu li a span {
-                display: none;
-            }
-
-            .sidebar .menu li a {
+            .menu {
+                width: 100%;
                 justify-content: center;
-                font-size: 0;
-            }
-
-            .main-content {
-                margin-left: 80px;
-                width: calc(100% - 80px);
             }
 
             .search-box {
-                width: 220px;
+                width: 100%;
             }
         }
 
@@ -666,61 +669,23 @@
             }
 
             .sidebar {
-                /* keep sidebar off-canvas on small screens; shown via .show */
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                transform: translateX(-100%);
-                transition: transform .28s ease;
-                z-index: 1000;
-                width: 260px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
 
-            .sidebar.show {
-                transform: translateX(0);
+            .menu {
+                justify-content: flex-start;
+                gap: 6px;
             }
-
-            .mobile-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.45);
-                z-index: 900;
-            }
-
-            .mobile-overlay.show {
-                display: block;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-                position: fixed;
-                left: 12px;
-                top: 12px;
-                z-index: 1100;
-                background: #2563eb;
-                color: #fff;
-                border: none;
-                padding: 10px 12px;
-                border-radius: 8px;
-                box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-            }
-
-            .mobile-menu-btn i { font-size: 18px; }
 
             .main-content {
-                margin-left: 0;
-                width: 100%;
                 padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
-    <div id="mobile-overlay" class="mobile-overlay"></div>
-
 <div id="login-screen" class="screen auth-screen">
     <div class="container">
         <div class="left-panel">
@@ -798,6 +763,8 @@
             <li><a href="#" data-target="dashboard-screen" class="active"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
             <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
             <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+            <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
             <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
@@ -909,6 +876,8 @@
             <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
             <li><a href="#" data-target="guards-screen" class="active"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
             <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+            <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
             <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
@@ -987,6 +956,8 @@
             <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
             <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
             <li><a href="#" data-target="controllers-screen" class="active"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+            <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
             <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
@@ -1085,6 +1056,96 @@
                     </tr>
                 </tbody>
             </table>
+        </section>
+    </div>
+</div>
+
+<div id="about-screen" class="screen hidden">
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>Elite Security</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+            <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
+            <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" data-target="about-screen" class="active"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+            <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
+            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>About Elite Security</h1>
+                <p class="content-summary">A secure platform designed for modern security teams and operations.</p>
+            </div>
+        </header>
+        <section class="cards">
+            <div class="card"><i class="fa-solid fa-bullseye"></i><h2>Mission</h2><p>Deliver dependable security operations with intelligent monitoring, fast response, and clear insights.</p></div>
+            <div class="card"><i class="fa-solid fa-eye"></i><h2>Vision</h2><p>Build safer workplaces and communities through smarter guard management and data-driven oversight.</p></div>
+            <div class="card"><i class="fa-solid fa-hands-holding-circle"></i><h2>Values</h2><p>Trust, integrity, reliability and collaboration shape every deployment and every client relationship.</p></div>
+            <div class="card"><i class="fa-solid fa-rocket"></i><h2>Approach</h2><p>Focus on fast access, clear reporting, and operational control for security leadership.</p></div>
+        </section>
+        <section class="table-container">
+            <div class="table-header">
+                <h2>Why choose us?</h2>
+            </div>
+            <div class="content-summary">
+                <p>Elite Security is designed for teams who need dependable guard administration, real-time deployment visibility, and support for both routine and emergency operations. Our platform is built to work on desktop and mobile devices, with a modern interface that keeps every shift, client, and controller aligned.</p>
+                <p>Whether you manage a single site or a nationwide portfolio, you can rely on consistent communication, easy scheduling, and fast reporting across your security teams.</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="contact-screen" class="screen hidden">
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>Elite Security</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-target="dashboard-screen"><i class="fa-solid fa-house"></i><span>Dashboard</span></a></li>
+            <li><a href="#" data-target="guards-screen"><i class="fa-solid fa-user-shield"></i><span>Guards</span></a></li>
+            <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
+            <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
+            <li><a href="#" data-target="contact-screen" class="active"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
+            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>Contact Support</h1>
+                <p class="content-summary">Reach out for help with access, deployment setup, or account support.</p>
+            </div>
+        </header>
+        <section class="table-container">
+            <div class="table-header">
+                <h2>Contact details</h2>
+            </div>
+            <div class="content-summary">
+                <p><strong>Email:</strong> support@elitesecurity.co.ke</p>
+                <p><strong>Phone:</strong> +254 700 123 456</p>
+                <p><strong>Address:</strong> 10 Security Lane, Nairobi, Kenya</p>
+            </div>
+        </section>
+        <section class="add-form">
+            <h3>Send us a message</h3>
+            <div class="form-grid">
+                <input id="contact-name" type="text" placeholder="Your Name" required>
+                <input id="contact-email" type="email" placeholder="Your Email" required>
+                <input id="contact-subject" type="text" placeholder="Subject" required>
+            </div>
+            <div class="form-grid">
+                <textarea id="contact-message" rows="5" placeholder="Your message here" style="resize:none;padding:14px 16px;border:1px solid #ddd;border-radius:10px;background:#f9fafb;font-size:14px;"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="send-contact-btn">Submit Message</button>
+            </div>
+            <p id="contact-feedback" style="display:none;margin-top:12px;color:#16a34a;"></p>
         </section>
     </div>
 </div>
@@ -1413,6 +1474,30 @@
         renderControllers();
     }
 
+    function handleContactSubmit() {
+        const name = document.getElementById('contact-name');
+        const email = document.getElementById('contact-email');
+        const subject = document.getElementById('contact-subject');
+        const message = document.getElementById('contact-message');
+        const feedback = document.getElementById('contact-feedback');
+
+        if (!name.value.trim() || !email.value.trim() || !subject.value.trim() || !message.value.trim()) {
+            feedback.textContent = 'Please complete all fields before sending your message.';
+            feedback.style.color = '#dc2626';
+            feedback.style.display = 'block';
+            return;
+        }
+
+        feedback.textContent = 'Thank you! Your message has been submitted. We will contact you shortly.';
+        feedback.style.color = '#16a34a';
+        feedback.style.display = 'block';
+
+        name.value = '';
+        email.value = '';
+        subject.value = '';
+        message.value = '';
+    }
+
     function filterDashboardTable(query) {
         const table = document.getElementById('dashboard-table');
         const rows = table.querySelectorAll('tbody tr');
@@ -1487,28 +1572,18 @@
             controllersTable.addEventListener('click', handleControllerTableClick);
         }
 
+        const sendContactBtn = document.getElementById('send-contact-btn');
+        if (sendContactBtn) {
+            sendContactBtn.addEventListener('click', handleContactSubmit);
+        }
+
         loadSavedGuardStatuses();
         renderControllers();
-
-        // Mobile menu toggle
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.querySelector('.sidebar');
-        const overlay = document.getElementById('mobile-overlay');
-        function openMobileMenu() {
-            if (sidebar) sidebar.classList.add('show');
-            if (overlay) overlay.classList.add('show');
-        }
-        function closeMobileMenu() {
-            if (sidebar) sidebar.classList.remove('show');
-            if (overlay) overlay.classList.remove('show');
-        }
-        if (mobileBtn) mobileBtn.addEventListener('click', openMobileMenu);
-        if (overlay) overlay.addEventListener('click', closeMobileMenu);
 
         // Close mobile menu when navigation links are used
         document.querySelectorAll('.sidebar .menu a').forEach((a) => {
             a.addEventListener('click', () => {
-                closeMobileMenu();
+                // no mobile sidebar behavior for top nav layout
             });
         });
 
