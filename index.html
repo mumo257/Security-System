@@ -753,6 +753,41 @@
     </div>
 </div>
 
+<div id="reset-screen" class="screen hidden auth-screen">
+    <div class="container">
+        <div class="left-panel">
+            <div class="overlay">
+                <i class="fa-solid fa-lock-open logo"></i>
+                <h1>Reset Password</h1>
+                <p>
+                    Enter your new password below.<br>
+                    Make sure it is strong and easy to remember.
+                </p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <form id="reset-form" class="login-form">
+                <h2>Create New Password</h2>
+                <p>Set a new password for your account.</p>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input id="new-password" type="password" placeholder="New Password" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input id="confirm-password" type="password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit">Save Password</button>
+                <p id="reset-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
+                <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Login
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div id="dashboard-screen" class="screen hidden">
     <div class="sidebar">
         <div class="logo">
@@ -1187,6 +1222,11 @@
         forgotForm.addEventListener('submit', handleForgotPassword);
     }
 
+    const resetForm = document.getElementById('reset-form');
+    if (resetForm) {
+        resetForm.addEventListener('submit', handleResetPassword);
+    }
+
     function handleForgotPassword(event) {
         event.preventDefault();
         const emailInput = document.getElementById('forgot-email');
@@ -1199,10 +1239,55 @@
             return false;
         }
 
-        message.textContent = `A password reset link has been sent to ${email}. Check your inbox.`;
+        const resetLink = document.createElement('a');
+        resetLink.href = '#';
+        resetLink.textContent = 'Reset your password now.';
+        resetLink.style.color = '#2563eb';
+        resetLink.style.textDecoration = 'underline';
+        resetLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showScreen('reset-screen');
+        });
+
+        message.innerHTML = `A password reset link has been sent to ${email}. `;
+        message.appendChild(resetLink);
         message.style.color = '#16a34a';
         message.style.display = 'block';
         emailInput.value = '';
+        return false;
+    }
+
+    function handleResetPassword(event) {
+        event.preventDefault();
+        const passwordInput = document.getElementById('new-password');
+        const confirmInput = document.getElementById('confirm-password');
+        const message = document.getElementById('reset-message');
+        const password = passwordInput.value.trim();
+        const confirm = confirmInput.value.trim();
+
+        if (!password || !confirm) {
+            message.textContent = 'Please fill in both password fields.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return false;
+        }
+
+        if (password !== confirm) {
+            message.textContent = 'Passwords do not match. Please try again.';
+            message.style.color = '#dc2626';
+            message.style.display = 'block';
+            return false;
+        }
+
+        message.textContent = 'Your password has been reset successfully. You can now log in with your new password.';
+        message.style.color = '#16a34a';
+        message.style.display = 'block';
+        passwordInput.value = '';
+        confirmInput.value = '';
+
+        setTimeout(() => {
+            showScreen('login-screen');
+        }, 1800);
         return false;
     }
 
