@@ -115,6 +115,87 @@
             background: #fff;
         }
 
+        /* Walking-person stage and reveal animation for login */
+        .login-stage {
+            width: 80%;
+            max-width: 420px;
+            text-align: center;
+            padding: 10px 8px;
+        }
+
+        .walker-wrap {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .walker {
+            width: 140px;
+            height: 120px;
+            transform: translateX(-160%);
+            /* slower entrance and gentler bob to simulate a slow walk */
+            animation-name: walkIn, bob;
+            animation-duration: 3.6s, .8s;
+            animation-delay: 0s, 3.6s;
+            animation-timing-function: cubic-bezier(.2,.9,.2,1), ease-in-out;
+            animation-fill-mode: forwards, both;
+            animation-iteration-count: 1, infinite;
+        }
+
+        @keyframes walkIn {
+            from { transform: translateX(-140%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes bob {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 420px;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity .45s ease, transform .45s ease;
+        }
+
+        .login-form .input-group {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height .35s ease, opacity .35s ease, margin .35s ease;
+        }
+
+        .login-form button,
+        .login-form .forgot {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity .35s ease, transform .35s ease;
+        }
+
+        .login-form.revealed {
+            opacity: 1;
+            transform: none;
+        }
+
+        .login-form.revealed .input-group {
+            max-height: 84px;
+            opacity: 1;
+            margin-bottom: 20px;
+        }
+
+        .login-form.revealed button,
+        .login-form.revealed .forgot {
+            opacity: 1;
+            transform: none;
+        }
+
         .login-form {
             width: 80%;
             max-width: 420px;
@@ -701,22 +782,37 @@
             </div>
         </div>
         <div class="right-panel">
-            <form id="login-form" class="login-form">
-                <h2>Welcome Back</h2>
-                <p>Please login to continue</p>
-                <div class="input-group">
-                    <i class="fa fa-user"></i>
-                    <input type="text" placeholder="Username" required>
+            <div class="login-stage" aria-hidden="false">
+                <div class="walker-wrap">
+                    <svg class="walker" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="walking person">
+                        <g fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="14" r="8" fill="#2563eb" />
+                            <path d="M18 22 v14" />
+                            <path d="M18 30 l12 -6" />
+                            <path d="M30 24 l18 6" />
+                            <path d="M18 36 l-8 18" />
+                            <path d="M18 36 l12 18" />
+                        </g>
+                    </svg>
                 </div>
-                <div class="input-group">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="Password" required>
-                </div>
-                <button type="submit">Login</button>
-                <a href="#" class="forgot" onclick="showScreen('forgot-screen'); return false;">
-                    Forgot Password?
-                </a>
-            </form>
+
+                <form id="login-form" class="login-form" aria-label="login form">
+                    <h2>Welcome Back</h2>
+                    <p>Please login to continue</p>
+                    <div class="input-group">
+                        <i class="fa fa-user"></i>
+                        <input id="login-username" type="text" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa fa-lock"></i>
+                        <input id="login-password" type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                    <a href="#" class="forgot" onclick="showScreen('forgot-screen'); return false;">
+                        Forgot Password?
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -735,20 +831,35 @@
             </div>
         </div>
         <div class="right-panel">
-            <form id="forgot-form" class="login-form">
-                <h2>Reset Password</h2>
-                <p>Enter your registered email address.</p>
-                <div class="input-group">
-                    <i class="fa-solid fa-envelope"></i>
-                    <input id="forgot-email" type="email" placeholder="Email Address" required>
+            <div class="login-stage">
+                <div class="walker-wrap">
+                    <svg class="walker" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="walking person">
+                        <g fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="14" r="8" fill="#2563eb" />
+                            <path d="M18 22 v14" />
+                            <path d="M18 30 l12 -6" />
+                            <path d="M30 24 l18 6" />
+                            <path d="M18 36 l-8 18" />
+                            <path d="M18 36 l12 18" />
+                        </g>
+                    </svg>
                 </div>
-                <button type="submit">Send Reset Link</button>
-                <p id="forgot-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
-                <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Back to Login
-                </a>
-            </form>
+
+                <form id="forgot-form" class="login-form">
+                    <h2>Reset Password</h2>
+                    <p>Enter your registered email address.</p>
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input id="forgot-email" type="email" placeholder="Email Address" required>
+                    </div>
+                    <button type="submit">Send Reset Link</button>
+                    <p id="forgot-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
+                    <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back to Login
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -766,24 +877,39 @@
             </div>
         </div>
         <div class="right-panel">
-            <form id="reset-form" class="login-form">
-                <h2>Create New Password</h2>
-                <p>Set a new password for your account.</p>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input id="new-password" type="password" placeholder="New Password" required>
+            <div class="login-stage">
+                <div class="walker-wrap">
+                    <svg class="walker" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="walking person">
+                        <g fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="14" r="8" fill="#2563eb" />
+                            <path d="M18 22 v14" />
+                            <path d="M18 30 l12 -6" />
+                            <path d="M30 24 l18 6" />
+                            <path d="M18 36 l-8 18" />
+                            <path d="M18 36 l12 18" />
+                        </g>
+                    </svg>
                 </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input id="confirm-password" type="password" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit">Save Password</button>
-                <p id="reset-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
-                <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Back to Login
-                </a>
-            </form>
+
+                <form id="reset-form" class="login-form">
+                    <h2>Create New Password</h2>
+                    <p>Set a new password for your account.</p>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input id="new-password" type="password" placeholder="New Password" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input id="confirm-password" type="password" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit">Save Password</button>
+                    <p id="reset-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
+                    <a href="#" class="forgot" onclick="showScreen('login-screen'); return false;">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back to Login
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -800,7 +926,7 @@
             <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
             <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
             <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
-            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+            <li><a href="#" onclick="confirmLogout(event); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -913,7 +1039,7 @@
             <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
             <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
             <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
-            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+            <li><a href="#" onclick="confirmLogout(event); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -993,7 +1119,7 @@
             <li><a href="#" data-target="controllers-screen" class="active"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
             <li><a href="#" data-target="about-screen"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
             <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
-            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+            <li><a href="#" onclick="confirmLogout(event); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -1107,7 +1233,7 @@
             <li><a href="#" data-target="controllers-screen"><i class="fa-solid fa-users"></i><span>Controllers</span></a></li>
             <li><a href="#" data-target="about-screen" class="active"><i class="fa-solid fa-circle-info"></i><span>About</span></a></li>
             <li><a href="#" data-target="contact-screen"><i class="fa-solid fa-envelope"></i><span>Contact</span></a></li>
-            <li><a href="#" onclick="showScreen('login-screen'); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+            <li><a href="#" onclick="confirmLogout(event); return false;"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -1196,12 +1322,63 @@
         updateActiveMenu(id);
         window.location.hash = id;
         window.scrollTo(0, 0);
+        // If showing an auth screen with a walker, kick off its walking animation and reveal sequence
+        const animatedScreens = ['login-screen', 'forgot-screen', 'reset-screen'];
+        if (animatedScreens.includes(id)) {
+            startLoginWalk(id);
+        } else {
+            // remove revealed state from any forms when leaving auth screens
+            document.querySelectorAll('.login-form.revealed').forEach((f) => f.classList.remove('revealed'));
+        }
+    }
+
+    function startLoginWalk(screenId = 'login-screen') {
+        const screen = document.getElementById(screenId);
+        if (!screen) return;
+        const stage = screen.querySelector('.login-stage');
+        if (!stage) return;
+        const walker = stage.querySelector('.walker');
+        const form = stage.querySelector('.login-form');
+        if (form) form.classList.remove('revealed');
+
+        if (!walker) return;
+        // Replace walker node to restart CSS animation
+        const newWalker = walker.cloneNode(true);
+        walker.parentNode.replaceChild(newWalker, walker);
+
+        let handled = false;
+        newWalker.addEventListener('animationend', (e) => {
+            if (e.animationName === 'walkIn') {
+                handled = true;
+                if (form) setTimeout(() => form.classList.add('revealed'), 120);
+            }
+        });
+
+        // Fallback: if animationend doesn't fire (some browsers), reveal after expected duration
+        setTimeout(() => {
+            if (!handled && form) form.classList.add('revealed');
+        }, 4200);
     }
 
     function updateActiveMenu(id) {
         sidebarLinks.forEach((link) => {
             link.classList.toggle('active', link.dataset.target === id);
         });
+    }
+
+    function confirmLogout(event) {
+        const message = 'Do you wish to log out?';
+        const ok = window.confirm(message);
+        if (ok) {
+            try {
+                // clear any session-like state if present (non-destructive)
+                // localStorage.removeItem('auth'); // uncomment if you use an auth flag
+            } catch (e) {
+                // ignore
+            }
+            showScreen('login-screen');
+        }
+        return false;
     }
 
     function handleLogin(event) {
