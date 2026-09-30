@@ -244,6 +244,27 @@
             font-size: 15px;
         }
 
+        .login-form .password-toggle {
+            flex: 0 0 40px;
+            width: 40px;
+            padding: 0;
+            background: transparent;
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .login-form .password-toggle:hover {
+            background: transparent;
+            color: #2563eb;
+            transform: none;
+        }
+
+        .password-toggle i {
+            margin: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
         button {
             width: 100%;
             padding: 16px;
@@ -806,7 +827,11 @@
                     <div class="input-group">
                         <i class="fa fa-lock"></i>
                         <input id="login-password" type="password" placeholder="Password" required>
+                        <button class="password-toggle" type="button" aria-label="Show password" aria-pressed="false">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
                     </div>
+                    <p id="login-message" role="alert" style="display:none;margin:-8px 0 16px;color:#dc2626;"></p>
                     <button type="submit">Login</button>
                     <a href="#" class="forgot" onclick="showScreen('forgot-screen'); return false;">
                         Forgot Password?
@@ -831,6 +856,7 @@
             </div>
         </div>
         <div class="right-panel">
+        
             <div class="login-stage">
                 <div class="walker-wrap">
                     <svg class="walker" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="walking person">
@@ -897,10 +923,16 @@
                     <div class="input-group">
                         <i class="fa-solid fa-lock"></i>
                         <input id="new-password" type="password" placeholder="New Password" required>
+                        <button class="password-toggle" type="button" aria-label="Show new password" aria-pressed="false">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <div class="input-group">
                         <i class="fa-solid fa-lock"></i>
                         <input id="confirm-password" type="password" placeholder="Confirm Password" required>
+                        <button class="password-toggle" type="button" aria-label="Show confirm password" aria-pressed="false">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <button type="submit">Save Password</button>
                     <p id="reset-message" style="margin-top:20px;color:#16a34a;display:none;"></p>
@@ -1383,6 +1415,19 @@
 
     function handleLogin(event) {
         event.preventDefault();
+        const password = document.getElementById('login-password').value.trim();
+        const savedPassword = localStorage.getItem('security-system-password');
+        const message = document.getElementById('login-message');
+
+        if (!savedPassword || password !== savedPassword) {
+            message.textContent = savedPassword
+                ? 'Invalid password.'
+                : 'Invalid password. Please set a password using Forgot Password first.';
+            message.style.display = 'block';
+            return false;
+        }
+
+        message.style.display = 'none';
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('forgot-screen').classList.add('hidden');
         showScreen('dashboard-screen');
@@ -1393,6 +1438,19 @@
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
+
+    document.querySelectorAll('.password-toggle').forEach((passwordToggle) => {
+        passwordToggle.addEventListener('click', () => {
+            const passwordInput = passwordToggle.closest('.input-group').querySelector('input');
+            const isVisible = passwordInput.type === 'text';
+            passwordInput.type = isVisible ? 'password' : 'text';
+            const fieldName = passwordInput.id === 'new-password' ? 'new password' :
+                passwordInput.id === 'confirm-password' ? 'confirm password' : 'password';
+            passwordToggle.setAttribute('aria-label', `${isVisible ? 'Show' : 'Hide'} ${fieldName}`);
+            passwordToggle.setAttribute('aria-pressed', String(!isVisible));
+            passwordToggle.querySelector('i').className = isVisible ? 'fa fa-eye' : 'fa fa-eye-slash';
+        });
+    });
 
     const forgotForm = document.getElementById('forgot-form');
     if (forgotForm) {
@@ -1456,6 +1514,7 @@
             return false;
         }
 
+        localStorage.setItem('security-system-password', password);
         message.textContent = 'Your password has been reset successfully. You can now log in with your new password.';
         message.style.color = '#16a34a';
         message.style.display = 'block';
