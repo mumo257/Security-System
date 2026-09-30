@@ -596,6 +596,52 @@
             margin-top: 8px;
         }
 
+        .metric-editor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .metric-editor input {
+            width: 88px;
+            padding: 7px 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .metric-editor button {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border-radius: 6px;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .metric-editor button:hover {
+            background: #cbd5e1;
+            transform: none;
+        }
+
+        .metric-editor .metric-save {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .metric-editor .metric-save:hover {
+            background: #bbf7d0;
+        }
+
+        .metric-editor i {
+            margin: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
         .table-container {
             background: #fff;
             padding: 25px;
@@ -986,9 +1032,9 @@
             <p>Manage guards, deployments, attendance and security operations.</p>
         </section>
         <section class="cards">
-            <div class="card"><i class="fa-solid fa-user-shield"></i><h2>256</h2><p>Total Guards</p></div>
-            <div class="card"><i class="fa-solid fa-user-check"></i><h2>198</h2><p>On Duty</p></div>
-            <div class="card"><i class="fa-solid fa-user-clock"></i><h2>58</h2><p>Off Duty</p></div>
+            <div class="card"><i class="fa-solid fa-user-shield"></i><h2><span data-dashboard-guard-metric="total">256</span></h2><p>Total Guards</p></div>
+            <div class="card"><i class="fa-solid fa-user-check"></i><h2><span data-dashboard-guard-metric="active">198</span></h2><p>On Duty</p></div>
+            <div class="card"><i class="fa-solid fa-user-clock"></i><h2><span data-dashboard-guard-metric="off-duty">58</span></h2><p>Off Duty</p></div>
             <div class="card"><i class="fa-solid fa-triangle-exclamation"></i><h2>3</h2><p>Incidents Today</p></div>
         </section>
         <section class="clients-section">
@@ -1088,10 +1134,10 @@
             </div>
         </header>
         <section class="cards">
-            <div class="card"><i class="fa-solid fa-user-shield"></i><h2>256</h2><p>Total Guards</p></div>
-            <div class="card"><i class="fa-solid fa-user-check"></i><h2>198</h2><p>Active</p></div>
-            <div class="card"><i class="fa-solid fa-user-xmark"></i><h2>12</h2><p>Suspended</p></div>
-            <div class="card"><i class="fa-solid fa-user-clock"></i><h2>46</h2><p>On Leave</p></div>
+            <div class="card" data-guard-metric="total"><i class="fa-solid fa-user-shield"></i><h2><span class="metric-value">256</span></h2><p>Total Guards</p><div class="metric-editor"><button type="button" class="metric-edit" aria-label="Edit total guards"><i class="fa-solid fa-pen"></i></button><input class="metric-input hidden" type="number" min="0" step="1" aria-label="Total guards"><button type="button" class="metric-save hidden" aria-label="Save total guards"><i class="fa-solid fa-check"></i></button><button type="button" class="metric-cancel hidden" aria-label="Cancel editing total guards"><i class="fa-solid fa-xmark"></i></button></div></div>
+            <div class="card" data-guard-metric="active"><i class="fa-solid fa-user-check"></i><h2><span class="metric-value">198</span></h2><p>Active</p><div class="metric-editor"><button type="button" class="metric-edit" aria-label="Edit active guards"><i class="fa-solid fa-pen"></i></button><input class="metric-input hidden" type="number" min="0" step="1" aria-label="Active guards"><button type="button" class="metric-save hidden" aria-label="Save active guards"><i class="fa-solid fa-check"></i></button><button type="button" class="metric-cancel hidden" aria-label="Cancel editing active guards"><i class="fa-solid fa-xmark"></i></button></div></div>
+            <div class="card" data-guard-metric="suspended"><i class="fa-solid fa-user-xmark"></i><h2><span class="metric-value">12</span></h2><p>Suspended</p><div class="metric-editor"><button type="button" class="metric-edit" aria-label="Edit suspended guards"><i class="fa-solid fa-pen"></i></button><input class="metric-input hidden" type="number" min="0" step="1" aria-label="Suspended guards"><button type="button" class="metric-save hidden" aria-label="Save suspended guards"><i class="fa-solid fa-check"></i></button><button type="button" class="metric-cancel hidden" aria-label="Cancel editing suspended guards"><i class="fa-solid fa-xmark"></i></button></div></div>
+            <div class="card" data-guard-metric="leave"><i class="fa-solid fa-user-clock"></i><h2><span class="metric-value">46</span></h2><p>On Leave</p><div class="metric-editor"><button type="button" class="metric-edit" aria-label="Edit guards on leave"><i class="fa-solid fa-pen"></i></button><input class="metric-input hidden" type="number" min="0" step="1" aria-label="Guards on leave"><button type="button" class="metric-save hidden" aria-label="Save guards on leave"><i class="fa-solid fa-check"></i></button><button type="button" class="metric-cancel hidden" aria-label="Cancel editing guards on leave"><i class="fa-solid fa-xmark"></i></button></div></div>
         </section>
         <section class="table-container">
             <div class="table-header">
@@ -1586,6 +1632,84 @@
         });
     }
 
+    const guardMetricsStorageKey = 'guard-management-metrics';
+
+    function syncDashboardGuardMetrics() {
+        const getMetric = (metricKey) => Number(
+            document.querySelector(`#guards-screen [data-guard-metric="${metricKey}"] .metric-value`)?.textContent || 0
+        );
+        const dashboardValues = {
+            total: getMetric('total'),
+            active: getMetric('active'),
+            'off-duty': getMetric('suspended') + getMetric('leave')
+        };
+
+        Object.entries(dashboardValues).forEach(([metricKey, value]) => {
+            const dashboardValue = document.querySelector(`[data-dashboard-guard-metric="${metricKey}"]`);
+            if (dashboardValue) dashboardValue.textContent = String(value);
+        });
+    }
+
+    function finishGuardMetricEdit(card, saveChanges) {
+        const value = card.querySelector('.metric-value');
+        const input = card.querySelector('.metric-input');
+
+        if (saveChanges) {
+            const parsedValue = Number(input.value);
+            if (input.value === '' || !Number.isInteger(parsedValue) || parsedValue < 0) {
+                input.setCustomValidity('Enter a whole number greater than or equal to zero.');
+                input.reportValidity();
+                input.addEventListener('input', () => input.setCustomValidity(''), { once: true });
+                return;
+            }
+            value.textContent = String(parsedValue);
+            const savedMetrics = JSON.parse(localStorage.getItem(guardMetricsStorageKey) || '{}');
+            savedMetrics[card.dataset.guardMetric] = parsedValue;
+            localStorage.setItem(guardMetricsStorageKey, JSON.stringify(savedMetrics));
+            syncDashboardGuardMetrics();
+        }
+
+        input.classList.add('hidden');
+        card.querySelector('.metric-edit').classList.remove('hidden');
+        card.querySelector('.metric-save').classList.add('hidden');
+        card.querySelector('.metric-cancel').classList.add('hidden');
+    }
+
+    function initializeGuardMetrics() {
+        let savedMetrics = {};
+        try {
+            savedMetrics = JSON.parse(localStorage.getItem(guardMetricsStorageKey) || '{}');
+        } catch (e) {
+            savedMetrics = {};
+        }
+
+        document.querySelectorAll('#guards-screen [data-guard-metric]').forEach((card) => {
+            const metricKey = card.dataset.guardMetric;
+            const value = card.querySelector('.metric-value');
+            const input = card.querySelector('.metric-input');
+            if (Number.isInteger(savedMetrics[metricKey]) && savedMetrics[metricKey] >= 0) {
+                value.textContent = String(savedMetrics[metricKey]);
+            }
+
+            card.querySelector('.metric-edit').addEventListener('click', () => {
+                input.value = value.textContent;
+                input.classList.remove('hidden');
+                card.querySelector('.metric-edit').classList.add('hidden');
+                card.querySelector('.metric-save').classList.remove('hidden');
+                card.querySelector('.metric-cancel').classList.remove('hidden');
+                input.focus();
+                input.select();
+            });
+            card.querySelector('.metric-save').addEventListener('click', () => finishGuardMetricEdit(card, true));
+            card.querySelector('.metric-cancel').addEventListener('click', () => finishGuardMetricEdit(card, false));
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') finishGuardMetricEdit(card, true);
+                if (event.key === 'Escape') finishGuardMetricEdit(card, false);
+            });
+        });
+        syncDashboardGuardMetrics();
+    }
+
     function handleStatusChange(event) {
         const select = event.target.closest('.status-select');
         if (!select) return;
@@ -1899,6 +2023,7 @@
         }
 
         loadSavedGuardStatuses();
+        initializeGuardMetrics();
         renderControllers();
 
         // Close mobile menu when navigation links are used
